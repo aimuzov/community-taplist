@@ -29,7 +29,9 @@
 	}
 
 	export async function load({ page }) {
-		const url = JSONBIN_ITEMS_URL ? JSONBIN_ITEMS_URL : 'http://localhost:3000/items.json';
+		const url = JSONBIN_ITEMS_URL
+			? JSONBIN_ITEMS_URL + '/latest'
+			: 'http://localhost:3000/items.json';
 		const response = await fetch(url, { headers: { 'secret-key': JSONBIN_SECRET } });
 		const items = await response.json();
 		const preparedList = getPreparedList(Number(page.params.number), items);
