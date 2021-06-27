@@ -5,7 +5,7 @@ const headers = { 'secret-key': JSONBIN_SECRET, 'Content-Type': 'application/jso
 
 export async function get() {
 	const url = JSONBIN_ITEMS_URL ? JSONBIN_ITEMS_URL + '/latest' : mockUrl;
-	const response = await fetch(url, headers);
+	const response = await fetch(url, { headers });
 	const items = await response.json();
 
 	return items;
