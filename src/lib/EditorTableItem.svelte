@@ -1,10 +1,12 @@
 <script>
 	import { IMGBB_URL } from '$lib/env';
+	import { draggable } from '$lib/draggable';
 	import Spinner from '$lib/Spinner.svelte';
 
 	export let item;
-	export let number;
+	export let index;
 	export let onChangeItem;
+	export let onDragDrop;
 
 	let coverInputEl;
 	let coverChanging;
@@ -39,10 +41,7 @@
 		const body = await getRequestBodyForUploadCover(image);
 		const cover = await uploadCover(body);
 
-		onChangeItem({
-			...item,
-			cover
-		});
+		onChangeItem({ ...item, cover });
 
 		coverChanging = false;
 	}
@@ -55,9 +54,16 @@
 
 		return url;
 	}
+
+	$: number = index + 1;
 </script>
 
-<div class="root" class:even={number % 2 === 0}>
+<div
+	class="root draggable"
+	class:even={number % 2 === 0}
+	use:draggable={onDragDrop}
+	data-index={index}
+>
 	<div class="number">{number}</div>
 	<div
 		class="cover"
@@ -117,6 +123,24 @@
 		&.even {
 			background-color: #e9ecef;
 		}
+
+		&:hover {
+			background-color: rgba(225, 234, 90, 0.3);
+			cursor: pointer;
+		}
+	}
+
+	:global(body.dragging) .root:global(.draggable) * {
+		pointer-events: none;
+	}
+
+	.root:global(.highlighted) {
+		opacity: 0.5;
+	}
+
+	.root:global(.over) {
+		transform: scale(1.05);
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 	}
 
 	.number {
