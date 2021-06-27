@@ -1,5 +1,5 @@
 <script context="module">
-	import { JSONBIN_SECRET, JSONBIN_ITEMS_URL } from '$lib/env';
+	import * as api from '$lib/api';
 
 	const ITEMS_PER_LIST = 12;
 	const ITEMS_PER_COLUMN = 4;
@@ -29,11 +29,7 @@
 	}
 
 	export async function load({ page }) {
-		const url = JSONBIN_ITEMS_URL
-			? JSONBIN_ITEMS_URL + '/latest'
-			: 'http://localhost:3000/items.json';
-		const response = await fetch(url, { headers: { 'secret-key': JSONBIN_SECRET } });
-		const items = await response.json();
+		const items = await api.get();
 		const preparedList = getPreparedList(Number(page.params.number), items);
 
 		return { props: { list: preparedList } };
@@ -41,7 +37,7 @@
 </script>
 
 <script>
-	import TapList from '$lib/TapList/index.svelte';
+	import TapList from '$lib/TapList.svelte';
 
 	export let list;
 </script>

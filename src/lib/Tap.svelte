@@ -7,9 +7,11 @@
 <div class="root">
 	<div class="inner">
 		<div class="cover" style="background-image: url({item.cover})">
-			<div class="number">{item.number}</div>
+			<div class="number">{item.number || '?'}</div>
 		</div>
-		<div class="beer-name">{item.name}</div>
+		<div class="beer-name">
+			{item.name}
+		</div>
 		<div class="brewery-and-style">
 			{breweryAndStyle}
 		</div>
