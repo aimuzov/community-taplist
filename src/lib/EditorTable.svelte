@@ -19,9 +19,15 @@
 	{#each $form as item, index}
 		<EditorTableItem
 			{item}
-			number={index + 1}
+			{index}
 			onChangeItem={(item) => {
 				$form[index] = item;
+			}}
+			onDragDrop={(currentIndex, nextIndex) => {
+				const element = $form[currentIndex];
+
+				$form[currentIndex] = $form[nextIndex];
+				$form[nextIndex] = element;
 			}}
 		/>
 	{/each}
