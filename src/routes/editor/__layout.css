@@ -1,0 +1,6 @@
+body {
+	background-color: #2b2d42;
+	font-family: 'Arsenal';
+	--webkit-font-smoothing: antialiased;
+	margin: 0;
+}

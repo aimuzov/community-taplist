@@ -1,10 +1,16 @@
 <script>
-	import Tap from '../Tap/index.svelte';
+	import Tap from '$lib/Tap.svelte';
 
 	function flipper(node) {
-		window.setInterval(() => {
+		const intervalId = window.setInterval(() => {
 			node.classList.toggle('flipped');
 		}, 8000);
+
+		return {
+			destroy() {
+				clearInterval(intervalId);
+			}
+		};
 	}
 
 	export let list;
