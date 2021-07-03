@@ -20,6 +20,7 @@ export async function update(data) {
 		body
 	});
 	const result = await response.json();
+	const updatedData = result.data;
 
-	return result;
+	return updatedData;
 }
