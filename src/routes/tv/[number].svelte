@@ -29,10 +29,14 @@
 	}
 
 	export async function load({ page }) {
-		const items = await api.get();
-		const preparedList = getPreparedList(Number(page.params.number), items);
-
-		return { props: { list: preparedList } };
+		try {
+			const items = await api.get();
+			const preparedList = getPreparedList(Number(page.params.number), items);
+			return { props: { list: preparedList } };
+		} catch (e) {
+			console.log(e);
+			return { props: { list: [] } };
+		}
 	}
 </script>
 
