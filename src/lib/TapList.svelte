@@ -1,6 +1,7 @@
 <script>
 	import Tap from '$lib/Tap.svelte';
 
+	/*
 	function flipper(node) {
 		const intervalId = window.setInterval(() => {
 			node.classList.toggle('flipped');
@@ -12,6 +13,7 @@
 			}
 		};
 	}
+	*/
 
 	export let list;
 </script>
@@ -21,7 +23,8 @@
 		<div class="column">
 			{#each column as [frontItem, backItem]}
 				{#if backItem}
-					<div class="card" use:flipper>
+					<div id="special-card" class="card">
+						<!-- <div class="card" use:flipper> -->
 						<div class="card-face front">
 							<Tap item={frontItem} />
 						</div>
