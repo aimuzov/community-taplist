@@ -1,3 +1,5 @@
+import type { JsonBinItem } from './json-bin';
+
 export default {
 	record: [
 		{
@@ -175,6 +177,6 @@ export default {
 			brewery: 'Jaws',
 			attrs: { alc: '6,0', ibu: '20', price04: '280', price025: '175' }
 		}
-	],
+	] satisfies JsonBinItem[],
 	metadata: { id: '66532075acd3cb34a84dd02b', private: true, createdAt: '2024-05-26T11:43:49.575Z' }
-};
+} as const;

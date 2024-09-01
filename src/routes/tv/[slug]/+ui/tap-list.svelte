@@ -1,26 +1,20 @@
 <script lang="ts">
 	import TapItem from './tap-item.svelte';
 
-	function flipper(node: HTMLDivElement) {
-		const intervalId = window.setInterval(() => node.classList.toggle('flipped'), 8000);
-		return { destroy: () => clearInterval(intervalId) };
-	}
-
 	export let list;
 </script>
 
 <div class="tap-list">
 	{#each list as column}
 		<div>
-			{#each column as [frontItem, backItem]}
-				{#if backItem}
-					<div class="card" use:flipper>
-						<div class="card-face front"><TapItem item={frontItem} /></div>
-						<div class="card-face back"><TapItem item={backItem} /></div>
-					</div>
-				{:else}
-					<TapItem item={frontItem} />
-				{/if}
+			{#each column as [itemPrimary, itemSecondary]}
+				<div class="card">
+					<TapItem item={itemPrimary} />
+
+					{#if itemSecondary}
+						<div class="secondary"><TapItem item={itemSecondary} /></div>
+					{/if}
+				</div>
 			{/each}
 		</div>
 	{/each}
@@ -39,26 +33,24 @@
 		position: relative;
 	}
 
-	.card:global(.flipped) {
-		& .card-face.front {
-			opacity: 0;
-		}
+	.secondary {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0%;
+		animation: shuffle;
+		animation-duration: 12s;
+		animation-iteration-count: infinite;
 	}
 
-	.card-face {
-		transition: 2000ms opacity;
-
-		&.front {
-			position: relative;
-			z-index: 2;
-		}
-
-		&.back {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-		}
+	/* prettier-ignore */
+	@keyframes shuffle {
+		0%		{ opacity: 0 }
+		20%		{ opacity: 0 }
+		40%		{ opacity: 1 }
+		80%		{ opacity: 1 }
+		100%	{ opacity: 0 }
 	}
 </style>

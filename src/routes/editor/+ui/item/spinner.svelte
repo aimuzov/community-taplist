@@ -1,8 +1,4 @@
-<script>
-	export let size;
-</script>
-
-<div class="root" style="width: {size}; height: {size}">
+<div class="root" style="width: 25px; height: 25px">
 	<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 48 48">
 		<g fill="none">
 			<path
@@ -21,19 +17,16 @@
 
 <style lang="postcss">
 	.root {
-		animation: loading-spinner 1s linear infinite;
+		animation: spin 1s linear infinite;
 		position: absolute;
 		top: 25%;
 		left: 25%;
 		color: #f3722c;
 	}
 
-	@keyframes loading-spinner {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
+	/* prettier-ignore */
+	@keyframes spin {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
 	}
 </style>

@@ -3,16 +3,14 @@ import { json } from '@sveltejs/kit';
 
 export async function GET() {
 	const response = await JsonBin.get();
-	const items = await response.json();
-	const data = { items };
+	const data = await response.json();
 
 	return json(data);
 }
 
 export async function POST({ request }) {
 	const response = await JsonBin.put(await request.text());
-	const items = await response.json();
-	const data = { items };
+	const data = await response.json();
 
 	return json(data);
 }

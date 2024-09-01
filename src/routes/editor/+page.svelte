@@ -1,61 +1,59 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
 	import Table from './+ui/table.svelte';
-	import { createForm, Form } from 'svelte-forms-lib';
+	import { createForm } from 'svelte-forms-lib';
 
 	export let data;
 
 	const { form, state, isSubmitting, handleSubmit, handleReset, updateInitialValues, handleChange } = createForm({
 		initialValues: data.items,
-		onSubmit: (values) => {
-			return fetch('/editor', {
-				method: 'POST',
-				body: JSON.stringify(values),
-				headers: { 'Content-Type': 'application/json' }
-			})
-				.then((r) => r.json())
-				.then((data) => {
-					$form = data.items;
-					updateInitialValues($form);
-					handleReset();
-				});
-		}
+		onSubmit
 	});
 
-	function onBeforeUnload(event) {
-		if (changed) {
+	async function onSubmit(values: unknown) {
+		const response = await fetch('/editor', {
+			method: 'POST',
+			body: JSON.stringify(values),
+			headers: { 'Content-Type': 'application/json' }
+		});
+		const data = await response.json();
+
+		$form = data.items;
+		updateInitialValues($form);
+		handleReset();
+	}
+
+	function preventLeave(event: BeforeUnloadEvent) {
+		if ($state.isModified) {
 			event.preventDefault();
 			event.returnValue = '';
 			return;
 		}
 
-		delete e['returnValue'];
+		delete event['returnValue'];
 	}
 
 	onMount(() => {
-		window.addEventListener('beforeunload', onBeforeUnload);
-		return () => window.removeEventListener('beforeunload', onBeforeUnload);
+		window.addEventListener('beforeunload', preventLeave);
+		return () => window.removeEventListener('beforeunload', preventLeave);
 	});
 </script>
 
 <div class="root">
-	<div class="inner">
-		<form>
-			{#if $state.isModified}
-				<button
-					class="button"
-					disabled={$isSubmitting}
-					class:loading={$isSubmitting}
-					on:click={handleSubmit}
-					type="submit">Сохранить</button
-				>
-			{/if}
+	<form>
+		{#if $state.isModified}
+			<button
+				class="button"
+				disabled={$isSubmitting}
+				class:loading={$isSubmitting}
+				on:click={handleSubmit}
+				type="submit">Сохранить</button
+			>
+		{/if}
 
-			<div class="heading">Таплист</div>
-			<Table {handleChange} items={form} />
-		</form>
-	</div>
+		<div class="heading">Таплист</div>
+		<Table {handleChange} items={form} />
+	</form>
 </div>
 
 <style lang="postcss">
@@ -73,9 +71,6 @@
 	.root :global(*) {
 		box-sizing: border-box;
 		outline: 0;
-	}
-
-	.inner {
 	}
 
 	.heading {

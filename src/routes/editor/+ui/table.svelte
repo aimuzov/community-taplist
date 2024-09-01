@@ -1,7 +1,15 @@
-<script>
-	import Item from './table-item.svelte';
+<script lang="ts">
+	import Item from './item/item.svelte';
+
 	export let items;
 	export let handleChange;
+
+	function onDragDrop(indexCurrent: string, indexNext: string) {
+		const element = $items[indexCurrent];
+
+		$items[indexCurrent] = $items[indexNext];
+		$items[indexNext] = element;
+	}
 </script>
 
 <div class="root">
@@ -18,23 +26,7 @@
 	</div>
 
 	{#each $items as item, index (item)}
-		<Item
-			{handleChange}
-			{item}
-			{index}
-			onChangeItem={(item) => {
-				// $items[index] = item;
-				// $items = [...$items];
-			}}
-			onDragDrop={(currentIndex, nextIndex) => {
-				const element = $items[currentIndex];
-
-				$items[currentIndex] = $items[nextIndex];
-				$items[nextIndex] = element;
-				// changed = true;
-				// $items = [...$items];
-			}}
-		/>
+		<Item {handleChange} {item} {index} {onDragDrop} />
 	{/each}
 </div>
 

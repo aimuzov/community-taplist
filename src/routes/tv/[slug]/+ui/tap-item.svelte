@@ -1,7 +1,5 @@
 <script>
 	export let item;
-
-	const breweryAndStyle = [item.brewery, item.style].filter(Boolean).join(' • ');
 </script>
 
 <div class="root">
@@ -9,8 +7,10 @@
 		<div class="cover" style="background-image: url({item.cover})">
 			<div class="number">{item.number || '?'}</div>
 		</div>
-		<div class="beer-name">{item.name}</div>
-		<div class="brewery-and-style">{breweryAndStyle}</div>
+
+		<div class="beer-name"><div class="beer-name-inner">{item.name}</div></div>
+		<div class="brewery-and-style">{[item.brewery, item.style].filter(Boolean).join(' • ')}</div>
+
 		<div class="meta">
 			<div class="ibu-and-alc">
 				IBU {item.attrs.ibu || '---'}<br /> ALC {item.attrs.alc || '---'}
@@ -42,10 +42,19 @@
 		display: flex;
 		align-items: center;
 		height: 110rem;
+	}
+
+	.beer-name-inner {
 		font-size: 62rem;
-		line-height: 50rem;
-		font-weight: 700;
+		line-height: 55rem;
+		height: 110rem;
 		color: #d1d1d1;
+		display: -webkit-box;
+		font-weight: 700;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		overflow: hidden;
 	}
 
 	.brewery-and-style {
@@ -74,12 +83,12 @@
 		text-align: right;
 		padding: 0rem 7rem 0 0;
 		color: #aaa;
+	}
 
-		& span {
-			font-weight: bold;
-			color: #d1d1d1;
-			font-size: 55rem;
-		}
+	.price span {
+		font-weight: bold;
+		color: #d1d1d1;
+		font-size: 55rem;
 	}
 
 	.cover {

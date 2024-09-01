@@ -1,32 +1,41 @@
-let dragEl;
+let dragEl: HTMLElement | null = null;
 
-function dragStart(event) {
+export type OnDragDrop = (current: string, next: string) => void;
+
+function dragStart(this: HTMLElement, event: DragEvent) {
 	document.body.classList.add('dragging');
 	this.classList.add('highlighted');
 
-	dragEl = this;
-	event.dataTransfer.effectAllowed = 'move';
-	event.dataTransfer.setData('index', this.dataset.index);
+	dragEl = this; // eslint-disable-line @typescript-eslint/no-this-alias
+
+	if (event.dataTransfer) {
+		event.dataTransfer.effectAllowed = 'move';
+		event.dataTransfer.setData('index', this.dataset.index ?? '');
+	}
 }
 
-function dragEnter() {
+function dragEnter(this: HTMLElement) {
 	this.classList.add('over');
 }
 
-function dragLeave() {
+function dragLeave(this: HTMLElement) {
 	this.classList.remove('over');
 }
 
-function dragOver(event) {
+function dragOver(event: DragEvent) {
 	event.preventDefault();
-	event.dataTransfer.dropEffect = 'move';
+
+	if (event.dataTransfer) {
+		event.dataTransfer.dropEffect = 'move';
+	}
+
 	return false;
 }
 
-function dragDrop(event, onDragDrop) {
+function dragDrop(this: HTMLElement, event: DragEvent, onDragDrop: OnDragDrop) {
 	if (dragEl != this) {
-		const current = this.dataset.index;
-		const next = event.dataTransfer.getData('index');
+		const current = this.dataset.index ?? '';
+		const next = event.dataTransfer?.getData('index') ?? '';
 
 		onDragDrop(current, next);
 	}
@@ -34,22 +43,22 @@ function dragDrop(event, onDragDrop) {
 	return false;
 }
 
-function dragEnd() {
+function dragEnd(this: HTMLElement) {
 	document.body.classList.remove('dragging');
 
-	var listItems = document.querySelectorAll('.draggable');
+	const listItems = document.querySelectorAll<HTMLElement>('.draggable');
 
-	[].forEach.call(listItems, (item) => {
+	[].forEach.call(listItems, (item: HTMLElement) => {
 		item.classList.remove('over');
 	});
 
 	this.classList.remove('highlighted');
 }
 
-export function draggable(node, onDragDrop) {
+export function draggable(node: HTMLElement, onDragDrop: OnDragDrop) {
 	node.draggable = true;
 
-	function dragDropExtended(event) {
+	function dragDropExtended(this: HTMLElement, event: DragEvent) {
 		return dragDrop.call(this, event, onDragDrop);
 	}
 
