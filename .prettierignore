@@ -1,4 +1,4 @@
-.svelte-kit/**
-static/**
-build/**
-node_modules/**
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

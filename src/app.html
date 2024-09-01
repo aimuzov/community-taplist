@@ -1,30 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+
+		<!-- prettier-ignore -->
+		<link href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&family=Blinker:wght@700&display=swap" rel="stylesheet" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&family=Blinker:wght@700&display=swap"
-			rel="stylesheet"
-		/>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%svelte.head%
+
+		%sveltekit.head%
 	</head>
 	<body>
-		<div id="svelte">%svelte.body%</div>
-		<script>
-			setTimeout(() => {
-				const node = document.getElementById('special-card');
-
-				if (node) {
-					window.setInterval(() => {
-						node.classList.toggle('flipped');
-					}, 8 * 1000);
-				}
-			}, 10 * 1000);
-		</script>
+		<div id="svelte">%sveltekit.body%</div>
+		<!-- <script> -->
+		<!-- 	setTimeout(() => { -->
+		<!-- 		const node = document.getElementById('special-card'); -->
+		<!---->
+		<!-- 		if (node) { -->
+		<!-- 			window.setInterval(() => { -->
+		<!-- 				node.classList.toggle('flipped'); -->
+		<!-- 			}, 8 * 1000); -->
+		<!-- 		} -->
+		<!-- 	}, 10 * 1000); -->
+		<!-- </script> -->
 	</body>
 </html>
