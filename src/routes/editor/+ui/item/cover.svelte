@@ -18,14 +18,14 @@
 
 		reader.readAsDataURL(image);
 
-		return new Promise<string>((resolve) => {
+		return new Promise<URLSearchParams>((resolve) => {
 			reader.onload = () => {
 				const formData = new FormData();
 				const imageAsString = removeBase64Prefix(reader.result as string);
 
 				formData.append('image', imageAsString);
 
-				const body = new URLSearchParams(formData as unknown as Record<string, string>).toString();
+				const body = new URLSearchParams(formData as unknown as Record<string, string>);
 
 				resolve(body);
 			};
@@ -48,7 +48,7 @@
 		);
 	}
 
-	async function upload(body: string) {
+	async function upload(body: URLSearchParams) {
 		const response = await fetch(PUBLIC_IMGBB_URL, { method: 'POST', body: body });
 		const result = await response.json();
 		const { url } = result.data;
