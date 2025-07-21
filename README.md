@@ -1,3 +1,3 @@
-# Community Tap List
+# Community Tap List [![Netlify Status](https://api.netlify.com/api/v1/badges/ce658834-5cf5-43ef-a091-546259495280/deploy-status)](https://app.netlify.com/projects/community-taplist/deploys)
 
 TBD...
