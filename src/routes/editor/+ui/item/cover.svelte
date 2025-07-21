@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { PUBLIC_IMGBB_URL } from '$env/static/public';
-	import type { JsonBinItem } from '$lib/json-bin';
+	import type { Item } from '$lib/json-provider';
 	import Spinner from './spinner.svelte';
 
-	export let item: JsonBinItem;
+	export let item: Item;
 	export let handleChange: (event: Event) => void;
 
 	let inputEl: HTMLInputElement;

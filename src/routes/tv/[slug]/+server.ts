@@ -1,8 +1,8 @@
 import { ITEMS_PER_COLUMN, ITEMS_PER_LIST } from '$lib/constants.js';
-import { JsonBin, type JsonBinItem } from '$lib/json-bin.js';
+import { provider, type Item } from '$lib/json-provider.js';
 import { json } from '@sveltejs/kit';
 
-function itemsConvert(number: number, itemsRaw: JsonBinItem[]) {
+function itemsConvert(number: number, itemsRaw: Item[]) {
 	const indexStart = ITEMS_PER_LIST * (number - 1);
 	const indexEnd = ITEMS_PER_LIST + indexStart;
 
@@ -27,13 +27,12 @@ function itemsConvert(number: number, itemsRaw: JsonBinItem[]) {
 }
 
 export async function GET(event) {
-	const jsonbinResponse = await JsonBin.get();
-	const jsonbinData = await jsonbinResponse.json();
+	const response = await provider.get();
+	const data = await response.json();
 	const tvNumber = Number(event.params.slug);
-	const data = {
-		updated: jsonbinData.updated,
-		items: itemsConvert(tvNumber, jsonbinData.items)
-	};
 
-	return json(data);
+	return json({
+		updated: data.updated,
+		items: itemsConvert(tvNumber, data.items)
+	});
 }

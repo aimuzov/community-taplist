@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { draggable, type OnDragDrop } from './draggable';
 	import Cover from './cover.svelte';
-	import type { JsonBinItem } from '$lib/json-bin';
+	import type { Item } from '$lib/json-provider';
 
 	export let handleChange: (event: Event) => void;
 	export let index: number;
-	export let item: JsonBinItem;
+	export let item: Item;
 	export let onDragDrop: OnDragDrop;
 
 	$: number = index + 1;
