@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_IMGBB_URL } from '$env/static/public';
 	import type { Item } from '$lib/json-provider';
 	import Spinner from './spinner.svelte';
 
@@ -8,12 +9,8 @@
 	let inputEl: HTMLInputElement;
 	let coverChanging: PromiseLike<void> | null = null;
 
-	function blobToBase64(blob: Blob) {
-		return new Promise<string>((resolve) => {
-			const reader = new FileReader();
-			reader.onloadend = () => resolve(reader.result as string);
-			reader.readAsDataURL(blob);
-		});
+	function removeBase64Prefix(base64string: string) {
+		return base64string.substr(base64string.indexOf(',') + 1);
 	}
 
 	function getRequestBodyForUploadCover(image: Blob) {
@@ -21,31 +18,19 @@
 
 		reader.readAsDataURL(image);
 
-		return new Promise<string>((resolve) => {
-			reader.onload = (e) => {
-				const img = new Image();
+		return new Promise<URLSearchParams>((resolve) => {
+			reader.onload = () => {
+				const formData = new FormData();
 
-				img.onload = function () {
-					let width = img.width;
-					let height = img.height;
+				console.log(reader.result);
 
-					const ratio = Math.min(250 / width, 250 / height);
+				const imageAsString = removeBase64Prefix(reader.result as string);
 
-					width = width * ratio;
-					height = height * ratio;
+				formData.append('image', imageAsString);
 
-					const canvas = document.createElement('canvas');
+				const body = new URLSearchParams(formData as unknown as Record<string, string>);
 
-					canvas.width = width;
-					canvas.height = height;
-
-					const ctx = canvas.getContext('2d')!;
-
-					ctx.drawImage(img, 0, 0, width, height);
-					canvas.toBlob((blob) => blobToBase64(blob!).then(resolve));
-				};
-
-				img.src = e.target!.result as string;
+				resolve(body);
 			};
 		});
 	}
@@ -53,9 +38,9 @@
 	function change(event: Event) {
 		coverChanging = Promise.resolve().then(async () => {
 			if (event.target && 'files' in event.target) {
-				const coverAsBase64 = await getRequestBodyForUploadCover((event.target.files as Blob[])[0]);
+				const body = await getRequestBodyForUploadCover((event.target.files as Blob[])[0]);
 
-				item.cover = coverAsBase64;
+				item.cover = await upload(body);
 				handleChange(event);
 			}
 		});
@@ -64,6 +49,14 @@
 			() => (coverChanging = null),
 			() => (coverChanging = null)
 		);
+	}
+
+	async function upload(body: URLSearchParams) {
+		const response = await fetch(PUBLIC_IMGBB_URL, { method: 'POST', body: body });
+		const result = await response.json();
+		const { url } = result.data;
+
+		return url;
 	}
 </script>
 
