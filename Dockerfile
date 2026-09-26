@@ -1,12 +1,12 @@
-# Сборка нативно на $BUILDPLATFORM (быстро на маке), финальный образ — под linux/amd64 сервера Timeweb.
-FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
+# Build natively on $BUILDPLATFORM (fast on Apple Silicon), the final image targets the server platform.
+FROM --platform=$BUILDPLATFORM node:22-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 COPY . .
 RUN npm run build && npm prune --omit=dev
 
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000
 COPY --from=builder /app/build ./build

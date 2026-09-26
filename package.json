@@ -1,7 +1,14 @@
 {
-	"name": "community-taplist-next",
+	"name": "community-taplist",
+	"description": "Digital tap list for a craft beer bar: TV screens plus a web editor, backed by a GitHub Gist",
+	"private": true,
 	"type": "module",
-	"version": "0.0.1",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/aimuzov/community-taplist.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -12,17 +19,15 @@
 		"format": "prettier --write ."
 	},
 	"engines": {
-		"node": "~20",
-		"npm": "~10"
-	},
-	"optionalDependencies": {
-		"@rollup/rollup-linux-x64-gnu": "4.21.2"
+		"node": ">=22",
+		"npm": ">=10"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "5.5.7",
 		"@sveltejs/kit": "2.5.25",
 		"@sveltejs/vite-plugin-svelte": "3.1.2",
 		"@types/eslint": "9.6.1",
+		"@types/node": "22.20.4",
 		"eslint": "9.9.1",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-svelte": "2.43.0",

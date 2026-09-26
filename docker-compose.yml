@@ -1,13 +1,12 @@
-# Запуск на Timeweb рядом с aleshavpnov: наружу порты не публикуются, трафик идёт через
-# Caddy aleshavpnov-web (site-блок taplist.aimuzov.online → taplist:3000) по общей сети edge.
-#   docker network create edge   # один раз
-#   docker compose up -d --build
+# Production setup: docker compose up -d --build
+# Host-specific tweaks (reverse proxy network, hiding the port) go into
+# docker-compose.override.yml, which is git-ignored — see docs/deploy.md.
 
 services:
   taplist:
     build:
       context: .
-      # Без этого образ, собранный на маке (arm64), падает на сервере с exec format error.
+      # Build for the typical x86 server even when running compose on an arm64 machine.
       platforms:
         - linux/amd64
     image: community-taplist:latest
@@ -15,14 +14,8 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - ORIGIN=https://taplist.aimuzov.online
       - NODE_OPTIONS=--max-old-space-size=96
-    # На сервере 1 ГБ без swap, рядом VPN. Лимит нужен, чтобы при нехватке
-    # памяти OOM-killer прибил taplist, а не xray-cdn.
+    # The app needs ~100 MB; the limit keeps it from starving neighbours on a small VPS.
     mem_limit: 160m
-    networks:
-      - edge
-
-networks:
-  edge:
-    external: true
+    ports:
+      - '${PORT:-3000}:3000'
