@@ -1,6 +1,3 @@
-export async function load(event) {
-	const response = await event.fetch('/editor');
-	const data = await response.json();
+import { itemsGet } from '$lib/server/store';
 
-	return data;
-}
+export const load = () => itemsGet();
