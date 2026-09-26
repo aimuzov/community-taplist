@@ -8,10 +8,11 @@ required.
 
 ## Features
 
-- **TV screens** (`/tv/1`, `/tv/2`) -- a 1920×1080 board with 12 taps per screen. Pages are
-  rendered on the server and ship no JavaScript, so they work on weak built-in TV browsers and
-  reload themselves to pick up changes. A 25th tap alternates with the last slot of the second
-  screen.
+- **Home** (`/`) -- pick a screen with the remote: left and right to choose, OK to open.
+- **TV screens** (`/tv/1`, `/tv/2`) -- a 1920×1080 board with 12 taps per screen. RETURN on the
+  remote goes back home. Pages are rendered on the server and reload themselves to pick up
+  changes, so the board keeps working even if the TV browser fails to run JavaScript. A 25th tap
+  alternates with the last slot of the second screen.
 - **Editor** (`/editor`) -- edit names, breweries, styles, IBU, ABV and prices, reorder taps with
   drag and drop, upload a cover image (resized in the browser to 250 px and stored inline).
 - **Storage** -- a single JSON file in a GitHub Gist, optionally cached in memory.
@@ -25,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:5173/tv/1>. Without a GitHub token the app runs on built-in sample data
+Open <http://localhost:5173>. Without a GitHub token the app runs on built-in sample data
 kept in memory. To open the editor locally, create `.env` with an editor password:
 
 ```bash
