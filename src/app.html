@@ -5,6 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 
+		<!-- SvelteKit reads its config from globalThis, which Chromium 68 on LG webOS 5 lacks. -->
+		<script>
+			if (typeof globalThis === 'undefined') window.globalThis = window;
+		</script>
+
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<!-- prettier-ignore -->
