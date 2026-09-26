@@ -16,6 +16,10 @@ services:
     env_file: .env
     environment:
       - ORIGIN=https://taplist.aimuzov.online
+      - NODE_OPTIONS=--max-old-space-size=96
+    # На сервере 1 ГБ без swap, рядом VPN. Лимит нужен, чтобы при нехватке
+    # памяти OOM-killer прибил taplist, а не xray-cdn.
+    mem_limit: 160m
     networks:
       - edge
 
