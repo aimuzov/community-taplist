@@ -1,4 +1,5 @@
-import { PRIVATE_JSON_PROVIDER, PRIVATE_CACHE } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import { building } from '$app/environment';
 import { gistProviderCreator } from './gist';
 import { jsonbinProviderCreator } from './json-bin';
 
@@ -28,7 +29,7 @@ export function cacheCreate() {
 
 	return {
 		get: () => cache,
-		isOutdated: () => PRIVATE_CACHE !== '1' || cache.updated === 0,
+		isOutdated: () => env.PRIVATE_CACHE !== '1' || cache.updated === 0,
 
 		update: (items: Item[]) => {
 			cache.items = items;
@@ -40,14 +41,15 @@ export function cacheCreate() {
 const cache = cacheCreate();
 
 const providerUnsafe =
-	PRIVATE_JSON_PROVIDER === 'github'
+	env.PRIVATE_JSON_PROVIDER === 'github'
 		? gistProviderCreator(cache)
-		: PRIVATE_JSON_PROVIDER === 'jsonbin'
+		: env.PRIVATE_JSON_PROVIDER === 'jsonbin'
 			? jsonbinProviderCreator(cache)
 			: null;
 
-if (providerUnsafe === null) {
+// При сборке env пуст (он приходит только в рантайме), а модуль всё равно грузится для анализа роутов.
+if (providerUnsafe === null && !building) {
 	throw new Error('AAA-AA-A!11');
 }
 
-export const provider = providerUnsafe;
+export const provider = providerUnsafe as NonNullable<typeof providerUnsafe>;

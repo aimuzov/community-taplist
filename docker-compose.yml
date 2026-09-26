@@ -1,0 +1,24 @@
+# Запуск на Timeweb рядом с aleshavpnov: наружу порты не публикуются, трафик идёт через
+# Caddy aleshavpnov-web (site-блок taplist.aimuzov.online → taplist:3000) по общей сети edge.
+#   docker network create edge   # один раз
+#   docker compose up -d --build
+
+services:
+  taplist:
+    build:
+      context: .
+      # Без этого образ, собранный на маке (arm64), падает на сервере с exec format error.
+      platforms:
+        - linux/amd64
+    image: community-taplist:latest
+    container_name: taplist
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - ORIGIN=https://taplist.aimuzov.online
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true
