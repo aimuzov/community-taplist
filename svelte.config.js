@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-vercel'; // '@sveltejs/adapter-netlify';
+import adapter from '@sveltejs/adapter-node';
 
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 

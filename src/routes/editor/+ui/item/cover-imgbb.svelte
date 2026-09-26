@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_IMGBB_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import type { Item } from '$lib/json-provider';
 	import Spinner from './spinner.svelte';
 
@@ -52,7 +52,7 @@
 	}
 
 	async function upload(body: URLSearchParams) {
-		const response = await fetch(PUBLIC_IMGBB_URL, { method: 'POST', body: body });
+		const response = await fetch(env.PUBLIC_IMGBB_URL, { method: 'POST', body: body });
 		const result = await response.json();
 		const { url } = result.data;
 

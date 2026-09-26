@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import TapList from './+ui/tap-list.svelte';
 	import type { ItemData } from '$lib/json-provider';
-	import { PUBLIC_DATA_UPDATE_INTERVAL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 
 	export let data: ItemData;
 
@@ -16,7 +16,7 @@
 	}
 
 	onMount(() => {
-		const timeoutId = setInterval(dataCheckOutdate, Number(PUBLIC_DATA_UPDATE_INTERVAL));
+		const timeoutId = setInterval(dataCheckOutdate, Number(env.PUBLIC_DATA_UPDATE_INTERVAL));
 		return () => clearInterval(timeoutId);
 	});
 </script>
