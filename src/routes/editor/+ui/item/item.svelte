@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { draggable, type OnDragDrop } from './draggable';
 	import Cover from './cover.svelte';
-	import type { Item } from '$lib/json-provider';
+	import type { Item } from '$lib/types';
 
 	export let handleChange: (event: Event) => void;
 	export let index: number;

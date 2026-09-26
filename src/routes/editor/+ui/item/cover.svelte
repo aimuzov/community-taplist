@@ -1,69 +1,45 @@
 <script lang="ts">
-	import type { Item } from '$lib/json-provider';
+	import type { Item } from '$lib/types';
 	import Spinner from './spinner.svelte';
 
 	export let item: Item;
 	export let handleChange: (event: Event) => void;
 
 	let inputEl: HTMLInputElement;
-	let coverChanging: PromiseLike<void> | null = null;
+	let coverChanging = false;
 
-	function blobToBase64(blob: Blob) {
-		return new Promise<string>((resolve) => {
-			const reader = new FileReader();
-			reader.onloadend = () => resolve(reader.result as string);
-			reader.readAsDataURL(blob);
-		});
-	}
+	// Covers are stored inline in the gist as data URLs, so keep them small.
+	const COVER_SIZE_MAX = 250;
+	const COVER_QUALITY = 0.85;
 
-	function getRequestBodyForUploadCover(image: Blob) {
-		const reader = new FileReader();
+	async function coverToDataUrl(file: File) {
+		const bitmap = await createImageBitmap(file);
+		const ratio = Math.min(1, COVER_SIZE_MAX / bitmap.width, COVER_SIZE_MAX / bitmap.height);
 
-		reader.readAsDataURL(image);
+		const canvas = document.createElement('canvas');
 
-		return new Promise<string>((resolve) => {
-			reader.onload = (e) => {
-				const img = new Image();
+		canvas.width = Math.round(bitmap.width * ratio);
+		canvas.height = Math.round(bitmap.height * ratio);
+		canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+		bitmap.close();
 
-				img.onload = function () {
-					let width = img.width;
-					let height = img.height;
-
-					const ratio = Math.min(250 / width, 250 / height);
-
-					width = width * ratio;
-					height = height * ratio;
-
-					const canvas = document.createElement('canvas');
-
-					canvas.width = width;
-					canvas.height = height;
-
-					const ctx = canvas.getContext('2d')!;
-
-					ctx.drawImage(img, 0, 0, width, height);
-					canvas.toBlob((blob) => blobToBase64(blob!).then(resolve));
-				};
-
-				img.src = e.target!.result as string;
-			};
-		});
+		return canvas.toDataURL('image/jpeg', COVER_QUALITY);
 	}
 
 	function change(event: Event) {
-		coverChanging = Promise.resolve().then(async () => {
-			if (event.target && 'files' in event.target) {
-				const coverAsBase64 = await getRequestBodyForUploadCover((event.target.files as Blob[])[0]);
+		const file = (event.currentTarget as HTMLInputElement).files?.[0];
 
-				item.cover = coverAsBase64;
+		if (!file) return;
+
+		coverChanging = true;
+
+		coverToDataUrl(file)
+			.then((cover) => {
+				item.cover = cover;
 				handleChange(event);
-			}
-		});
-
-		coverChanging.then(
-			() => (coverChanging = null),
-			() => (coverChanging = null)
-		);
+			})
+			.catch((error) => alert(`Не удалось обработать картинку: ${error}`))
+			.finally(() => (coverChanging = false));
 	}
 </script>
 

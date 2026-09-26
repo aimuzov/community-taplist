@@ -1,11 +1,12 @@
 <script lang="ts">
+	import type { TapColumn } from '$lib/tv';
 	import TapItem from './tap-item.svelte';
 
-	export let list;
+	export let columns: TapColumn[];
 </script>
 
 <div class="tap-list">
-	{#each list as column}
+	{#each columns as column}
 		<div>
 			{#each column as [itemPrimary, itemSecondary]}
 				<div class="card">

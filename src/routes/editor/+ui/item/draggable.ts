@@ -1,6 +1,6 @@
 let dragEl: HTMLElement | null = null;
 
-export type OnDragDrop = (current: string, next: string) => void;
+export type OnDragDrop = (current: number, next: number) => void;
 
 function dragStart(this: HTMLElement, event: DragEvent) {
 	document.body.classList.add('dragging');
@@ -34,8 +34,8 @@ function dragOver(event: DragEvent) {
 
 function dragDrop(this: HTMLElement, event: DragEvent, onDragDrop: OnDragDrop) {
 	if (dragEl != this) {
-		const current = this.dataset.index ?? '';
-		const next = event.dataTransfer?.getData('index') ?? '';
+		const current = Number(this.dataset.index);
+		const next = Number(event.dataTransfer?.getData('index'));
 
 		onDragDrop(current, next);
 	}
@@ -46,11 +46,7 @@ function dragDrop(this: HTMLElement, event: DragEvent, onDragDrop: OnDragDrop) {
 function dragEnd(this: HTMLElement) {
 	document.body.classList.remove('dragging');
 
-	const listItems = document.querySelectorAll<HTMLElement>('.draggable');
-
-	[].forEach.call(listItems, (item: HTMLElement) => {
-		item.classList.remove('over');
-	});
+	document.querySelectorAll('.draggable.over').forEach((item) => item.classList.remove('over'));
 
 	this.classList.remove('highlighted');
 }

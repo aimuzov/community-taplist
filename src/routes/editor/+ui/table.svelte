@@ -1,10 +1,12 @@
 <script lang="ts">
+	import type { Writable } from 'svelte/store';
+	import type { Item as ItemType } from '$lib/types';
 	import Item from './item/item.svelte';
 
-	export let items;
-	export let handleChange;
+	export let items: Writable<ItemType[]>;
+	export let handleChange: (event: Event) => void;
 
-	function onDragDrop(indexCurrent: string, indexNext: string) {
+	function onDragDrop(indexCurrent: number, indexNext: number) {
 		const element = $items[indexCurrent];
 
 		$items[indexCurrent] = $items[indexNext];

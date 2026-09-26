@@ -1,16 +1,14 @@
-import { provider } from '$lib/json-provider';
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 
-export async function GET() {
-	const response = await provider.get();
-	const data = await response.json();
-
-	return json(data);
-}
+import { itemsPut } from '$lib/server/store';
+import { isItemList } from '$lib/types';
 
 export async function POST({ request }) {
-	const response = await provider.put(await request.text());
-	const data = await response.json();
+	const items = await request.json().catch(() => null);
 
-	return json(data);
+	if (!isItemList(items)) {
+		error(400, 'Expected a list of taps');
+	}
+
+	return json(await itemsPut(items));
 }

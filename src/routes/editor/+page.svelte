@@ -16,6 +16,12 @@
 			body: JSON.stringify(values),
 			headers: { 'Content-Type': 'application/json' }
 		});
+
+		if (!response.ok) {
+			alert(`Не удалось сохранить: ${response.status} ${await response.text()}`);
+			return;
+		}
+
 		const data = await response.json();
 
 		$form = data.items;

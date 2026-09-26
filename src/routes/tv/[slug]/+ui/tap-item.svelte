@@ -1,5 +1,7 @@
-<script>
-	export let item;
+<script lang="ts">
+	import type { TapItem } from '$lib/tv';
+
+	export let item: TapItem;
 </script>
 
 <div class="root">
