@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { TV_COUNT } from '$lib/constants';
 	import { remoteKey } from '$lib/remote';
 
@@ -17,7 +18,7 @@
 
 		if (key === 'enter') {
 			event.preventDefault();
-			window.location.href = `/tv/${screens[selected]}`;
+			goto(`/tv/${screens[selected]}`);
 		}
 	}
 </script>
@@ -26,14 +27,7 @@
 
 <div class="home">
 	{#each screens as screen, index}
-		<!-- Full page load: TV pages must start clean for their meta refresh. -->
-		<a
-			class="screen"
-			class:selected={index === selected}
-			href="/tv/{screen}"
-			data-sveltekit-reload
-			on:mouseenter={() => (selected = index)}
-		>
+		<a class="screen" class:selected={index === selected} href="/tv/{screen}" on:mouseenter={() => (selected = index)}>
 			<span class="number">{screen}</span>
 			<span class="label">Экран {screen}</span>
 		</a>

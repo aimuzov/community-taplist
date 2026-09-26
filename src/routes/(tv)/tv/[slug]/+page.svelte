@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
+	import { goto, invalidateAll } from '$app/navigation';
+	import { updated } from '$app/stores';
 	import { remoteKey } from '$lib/remote';
 	import TapList from './+ui/tap-list.svelte';
 
@@ -8,16 +12,25 @@
 		if (remoteKey(event) !== 'back') return;
 
 		event.preventDefault();
-		// Full page load, so the meta refresh of this screen does not survive on the home page.
-		window.location.href = '/';
+		goto('/');
 	}
+
+	// After a deploy the old client can't load new chunks: reload once to pick them up.
+	$: if ($updated) window.location.reload();
+
+	async function refresh() {
+		if (await updated.check()) return;
+
+		// Updates the board in place, without the flicker of a full page reload.
+		await invalidateAll();
+	}
+
+	onMount(() => {
+		const intervalId = setInterval(() => refresh().catch(console.error), data.refreshSeconds * 1000);
+		return () => clearInterval(intervalId);
+	});
 </script>
 
 <svelte:window on:keydown={onKeydown} />
-
-<svelte:head>
-	<!-- Works even when the TV browser fails to run the client bundle. -->
-	<meta http-equiv="refresh" content={String(data.refreshSeconds)} />
-</svelte:head>
 
 <TapList columns={data.columns} />
