@@ -18,17 +18,25 @@ function client() {
 	return octokit;
 }
 
+function gistConfig() {
+	const { PRIVATE_GITHUB_GIST_ID: id, PRIVATE_GITHUB_GIST_FILENAME: filename } = env;
+
+	if (!id || !filename) {
+		throw new Error('PRIVATE_GITHUB_GIST_ID and PRIVATE_GITHUB_GIST_FILENAME must be set');
+	}
+
+	return { id, filename };
+}
+
 async function gistRead(): Promise<Item[]> {
 	if (useMock) return structuredClone(mockItems);
 
-	const { data } = await client().request('GET /gists/{gist_id}', {
-		gist_id: env.PRIVATE_GITHUB_GIST_ID,
-		headers
-	});
-	const file = data.files?.[env.PRIVATE_GITHUB_GIST_FILENAME];
+	const { id, filename } = gistConfig();
+	const { data } = await client().request('GET /gists/{gist_id}', { gist_id: id, headers });
+	const file = data.files?.[filename];
 
 	if (!file) {
-		throw new Error(`File "${env.PRIVATE_GITHUB_GIST_FILENAME}" not found in gist`);
+		throw new Error(`File "${filename}" not found in gist`);
 	}
 
 	// API inlines up to ~1 MB of content, bigger files need a separate fetch.
@@ -40,9 +48,11 @@ async function gistRead(): Promise<Item[]> {
 async function gistWrite(record: Item[]) {
 	if (useMock) return;
 
+	const { id, filename } = gistConfig();
+
 	await client().request('PATCH /gists/{gist_id}', {
-		gist_id: env.PRIVATE_GITHUB_GIST_ID,
-		files: { [env.PRIVATE_GITHUB_GIST_FILENAME]: { content: JSON.stringify({ record }, null, 2) } },
+		gist_id: id,
+		files: { [filename]: { content: JSON.stringify({ record }, null, 2) } },
 		headers
 	});
 }
