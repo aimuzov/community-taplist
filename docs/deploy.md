@@ -53,6 +53,10 @@ proxy adapter-node cannot tell the public protocol and host on its own.
 
 ## TV setup
 
-Open `https://<host>/tv/1` and `https://<host>/tv/2` in the TV browsers in full-screen mode. The
-layout is designed for 1920×1080 and scales down for 1280×720. Pages reload every
-`PUBLIC_DATA_UPDATE_INTERVAL` milliseconds.
+Open `https://<host>` in the TV browser in full-screen mode and pick a screen with the remote,
+RETURN brings you back. The layout is designed for 1920×1080 and scales down for 1280×720.
+The board fetches fresh data every `PUBLIC_DATA_UPDATE_INTERVAL` milliseconds and reloads
+itself once after a new deploy.
+
+The client bundle targets Chromium 68 (LG webOS 5). Older TVs still show the board, but without
+remote navigation and live updates.
