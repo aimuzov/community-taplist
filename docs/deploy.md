@@ -15,6 +15,9 @@ Apple Silicon is fast; only the final image targets the server platform.
 The container is limited to 160 MB of memory (`mem_limit`) and the Node heap to 96 MB, which is
 enough for the app and keeps it from starving other services on a small VPS.
 
+The image raises adapter-node's `BODY_SIZE_LIMIT` to 16 MB: the editor saves the whole list with
+covers inlined, which does not fit the default 512 KB. Override it in `.env` if needed.
+
 ## Behind a reverse proxy
 
 By default compose publishes port 3000 (override it with `PORT` in the shell environment). When a
