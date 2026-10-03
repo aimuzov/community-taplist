@@ -8,7 +8,8 @@ RUN npm run build && npm prune --omit=dev
 
 FROM node:22-alpine
 WORKDIR /app
-ENV NODE_ENV=production PORT=3000
+# The editor posts the list with covers as data URLs, far over the 512K default.
+ENV NODE_ENV=production PORT=3000 BODY_SIZE_LIMIT=16M
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
