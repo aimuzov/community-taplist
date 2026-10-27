@@ -26,7 +26,7 @@
 	</tr>
 </table>
 
-Lives at [taplist.aimuzov.online](https://taplist.aimuzov.online). A static [Astro](https://astro.build) site with Svelte islands plus a small dependency-free Node API (`src/backend/`) that stores the list in a JSON file on the server and keeps it in memory.
+Lives at [taplist.aimuzov.online](https://taplist.aimuzov.online). A static [Astro](https://astro.build) site with Svelte islands plus a small Node API (`src/backend/`), with the Sentry SDK as its only dependency, that stores the list in a JSON file on the server and keeps it in memory.
 
 ## What's inside
 
@@ -70,14 +70,28 @@ ssh projects 'docker exec community-taplist-api cp /data/history/<version>.json 
 The boards run in the LG webOS 5 browser, which is Chromium 68. Hence:
 
 - the client build lowers syntax to `chrome68` (the `client-target` plugin in `astro.config.mjs`: Astro itself forces `esnext` on the client);
-- `globalThis`, `queueMicrotask` and `String.prototype.replaceAll`, missing there, are polyfilled by an inline script in `src/frontend/layouts/base.astro`;
+- `globalThis`, `queueMicrotask`, `String.prototype.replaceAll`, `Object.fromEntries` and `Promise.allSettled`, missing there, are polyfilled by `public/polyfills.js`, loaded from `src/frontend/layouts/base.astro`;
 - no flex `gap`, no `min()` outside `@supports`, no `Array.prototype.at` or other post-2019 APIs in browser code.
 
-Check the bundle after a build: `npx es-check es2019 'dist/_astro/*.js' --module`.
+Check the bundle after a build:
+
+```sh
+npx es-check es2019 'dist/_astro/*.js' --module --checkFeatures --ignore=DynamicImport,ImportMeta,globalThis,PromiseAllSettled,StringReplaceAll
+```
+
+`import()` and `import.meta` are ES2020 by grammar but work since Chromium 64; the other ignored features are polyfilled.
 
 ## Content Security Policy
 
 The build puts a CSP with hashes of Astro scripts and styles into every page (`security.csp` in `astro.config.mjs`). `npm run dev` has no policy, so violations only show up in `npm run build && npm run preview` and in production. Images are allowed from any `https:` origin because covers may link to external hosts.
+
+## Error monitoring
+
+Errors go to the `community-taplist` project in Sentry: browser errors from the boards and the editor, and API errors answered with 500. Only errors, no tracing or replay. Events carry release `community-taplist@<version>` and environment `production`.
+
+- The browser SDK is a separate chunk that `base.astro` loads after the page, and only in a production build with `PUBLIC_SENTRY_DSN` set. It is a build variable, so the CSP `connect-src` gets the Sentry ingest origin at build time too.
+- The API reads `SENTRY_DSN` at startup. Without it the SDK stays off, so local runs and tests send nothing.
+- `PUBLIC_SENTRY_ENVIRONMENT` and `SENTRY_ENVIRONMENT` override the environment, e.g. for a local smoke test.
 
 ## Deployment
 
