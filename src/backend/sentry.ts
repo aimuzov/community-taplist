@@ -28,8 +28,11 @@ export function initSentry() {
 			genAI: { inputs: false, outputs: false },
 			stackFrameVariables: false,
 		},
-		// Сессии на каждый запрос не нужны, только ошибки.
-		integrations: [Sentry.httpIntegration({ sessions: false })],
+		// Сессии не нужны, только ошибки: ни на каждый запрос, ни на весь процесс.
+		integrations: (defaults) => [
+			...defaults.filter(({ name }) => name !== 'Http' && name !== 'ProcessSession'),
+			Sentry.httpIntegration({ sessions: false }),
+		],
 	})
 }
 
