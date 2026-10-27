@@ -26,7 +26,7 @@
 	</tr>
 </table>
 
-Живёт на [taplist.aimuzov.online](https://taplist.aimuzov.online). Статичный сайт на [Astro](https://astro.build) с островами на Svelte и маленький API (`src/backend/`) на Node без зависимостей: он хранит список в JSON-файле на сервере и держит его в памяти.
+Живёт на [taplist.aimuzov.online](https://taplist.aimuzov.online). Статичный сайт на [Astro](https://astro.build) с островами на Svelte и маленький API (`src/backend/`) на Node, из зависимостей у него только SDK Sentry: он хранит список в JSON-файле на сервере и держит его в памяти.
 
 ## Что внутри
 
@@ -70,14 +70,28 @@ ssh projects 'docker exec community-taplist-api cp /data/history/<версия>.
 Табло открывается в браузере LG webOS 5, это Chromium 68. Поэтому:
 
 - клиентская сборка опускает синтаксис до `chrome68` (плагин `client-target` в `astro.config.mjs`: сам Astro ставит клиенту `esnext`);
-- `globalThis`, `queueMicrotask` и `String.prototype.replaceAll`, которых в нём нет, подставляет инлайн-скрипт в `src/frontend/layouts/base.astro`;
+- `globalThis`, `queueMicrotask`, `String.prototype.replaceAll`, `Object.fromEntries` и `Promise.allSettled`, которых в нём нет, подставляет `public/polyfills.js`, его подключает `src/frontend/layouts/base.astro`;
 - в CSS без `gap` у flex и без `min()` вне `@supports`, без `Array.prototype.at` и прочего новее 2019 года в коде, который попадает в браузер.
 
-Проверка бандла после сборки: `npx es-check es2019 'dist/_astro/*.js' --module`.
+Проверка бандла после сборки:
+
+```sh
+npx es-check es2019 'dist/_astro/*.js' --module --checkFeatures --ignore=DynamicImport,ImportMeta,globalThis,PromiseAllSettled,StringReplaceAll
+```
+
+`import()` и `import.meta` по грамматике из ES2020, но работают с Chromium 64, остальные пропущенные возможности закрыты полифиллами.
 
 ## Content Security Policy
 
 Сборка кладёт в каждую страницу CSP с хешами скриптов и стилей Astro (`security.csp` в `astro.config.mjs`). В `npm run dev` политики нет, нарушения видны только в `npm run build && npm run preview` и на проде. Картинки разрешены с любого `https:`: обложки бывают ссылками на внешние сервисы.
+
+## Мониторинг ошибок
+
+Ошибки уходят в проект `community-taplist` в Sentry: браузерные с табло и редактора и ошибки API, на которые он ответил 500. Только ошибки, без трейсинга и replay. У событий release `community-taplist@<версия>` и environment `production`.
+
+- SDK браузера -- отдельный чанк, который `base.astro` грузит после страницы и только в production-сборке с `PUBLIC_SENTRY_DSN`. Это переменная сборки, поэтому и origin ingest Sentry попадает в `connect-src` CSP при сборке.
+- API читает `SENTRY_DSN` при старте. Без него SDK выключен, локальный запуск и тесты ничего не шлют.
+- `PUBLIC_SENTRY_ENVIRONMENT` и `SENTRY_ENVIRONMENT` меняют environment, например для локальной проверки.
 
 ## Выкладка
 

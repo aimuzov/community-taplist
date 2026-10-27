@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
+import { loadEnv } from 'vite'
 
 const proxy = { '/api': 'http://localhost:8787' }
 
@@ -9,6 +10,10 @@ const proxy = { '/api': 'http://localhost:8787' }
 const version = Date.now().toString(36)
 
 const { version: appVersion } = JSON.parse(readFileSync(new URL('package.json', import.meta.url), 'utf8'))
+
+// Табло шлёт ошибки прямо в Sentry, CSP должна пустить запросы к его ingest.
+const { PUBLIC_SENTRY_DSN } = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), 'PUBLIC_')
+const sentryOrigin = PUBLIC_SENTRY_DSN ? ` ${new URL(PUBLIC_SENTRY_DSN).origin}` : ''
 
 /** @type {import('astro').AstroIntegration} */
 const buildVersion = {
@@ -58,7 +63,7 @@ export default defineConfig({
 			directives: [
 				"default-src 'self'",
 				"img-src 'self' data: https:",
-				"connect-src 'self'",
+				`connect-src 'self'${sentryOrigin}`,
 				"object-src 'none'",
 				"base-uri 'self'",
 				"form-action 'self'",

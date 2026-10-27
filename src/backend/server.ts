@@ -7,6 +7,7 @@
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
 
+import { initSentry, reportError } from '#backend/sentry.ts'
 import { itemsGet, itemsPut } from '#backend/store.ts'
 import { isItemList } from '#shared/types.ts'
 
@@ -87,7 +88,10 @@ async function handle(request: IncomingMessage, response: ServerResponse) {
 	try {
 		;[status, body] = route ? await route(request) : [404, { error: 'Нет такой ручки' }]
 	} catch (error) {
-		if (!(error instanceof HttpError)) console.error(error)
+		if (!(error instanceof HttpError)) {
+			console.error(error)
+			reportError(error)
+		}
 
 		status = error instanceof HttpError ? error.status : 500
 		body = { error: (error as Error).message }
@@ -99,5 +103,6 @@ async function handle(request: IncomingMessage, response: ServerResponse) {
 
 // Тесты импортируют readJson, сервер поднимается только при запуске файла.
 if (import.meta.main) {
+	initSentry()
 	createServer(handle).listen(PORT, () => console.log(`api: http://localhost:${PORT}`))
 }

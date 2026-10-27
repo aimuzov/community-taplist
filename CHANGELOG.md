@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.5.0](https://github.com/aimuzov/community-taplist/compare/v2.4.3...v2.5.0) (2026-10-27)
+
+
+### Features
+
+* report browser and API errors to Sentry ([dab43d2](https://github.com/aimuzov/community-taplist/commit/dab43d2f4220cd177dddfd4188a53a082428c75f))
+* report browser and API errors to Sentry ([965a24a](https://github.com/aimuzov/community-taplist/commit/965a24ad3eb8716d79169f106af281204e9bf80a))
+
+
+### Bug Fixes
+
+* drop the Sentry process session in the API ([dc9c023](https://github.com/aimuzov/community-taplist/commit/dc9c02305793afe6cbe49aac4a94468e03f6dde1))
+* match native semantics in the fromEntries and allSettled polyfills ([333aa82](https://github.com/aimuzov/community-taplist/commit/333aa82667c4d2c08cbcd3c9dd97eb49bebf39de))
+* stop sending a Sentry session on every page load ([e2ddc2a](https://github.com/aimuzov/community-taplist/commit/e2ddc2a22b2c22a36c91d21ba53d63cad723f11e))
+* turn off Sentry default data collection and API sessions ([2f2ae4f](https://github.com/aimuzov/community-taplist/commit/2f2ae4f1474cd7ccf472e1531fc8005adcb03347))
+
 ## [2.4.3](https://github.com/aimuzov/community-taplist/compare/v2.4.2...v2.4.3) (2026-10-24)
 
 
