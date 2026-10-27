@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.1](https://github.com/aimuzov/community-taplist/compare/v2.5.0...v2.5.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **deps:** move to infra-site-kit v5.8.1 ([8ad677a](https://github.com/aimuzov/community-taplist/commit/8ad677adfafc41c03b847b16cf9ca4a0ffa52614))
+* **deps:** move to infra-site-kit v5.8.1 ([042e191](https://github.com/aimuzov/community-taplist/commit/042e191a47b49c9f98439e33a2833b20e2d3a5ed))
+
 ## [2.5.0](https://github.com/aimuzov/community-taplist/compare/v2.4.3...v2.5.0) (2026-10-27)
 
 
