@@ -11,5 +11,7 @@ export function initSentry(dsn: string) {
 		dsn,
 		environment: import.meta.env.PUBLIC_SENTRY_ENVIRONMENT || 'production',
 		release: `community-taplist@${import.meta.env.APP_VERSION}`,
+		// Сессия ушла бы в Sentry на каждый заход, а нужны только ошибки.
+		integrations: (defaults) => defaults.filter(({ name }) => name !== 'BrowserSession'),
 	})
 }
