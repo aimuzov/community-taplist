@@ -18,6 +18,18 @@ export function initSentry() {
 		environment: process.env.SENTRY_ENVIRONMENT || 'production',
 		// Без tracesSampleRate трейсинг выключен: таплисту хватает ошибок.
 		release: `${name}@${version}`,
+		// Явно, а не по умолчанию: дефолты v11 собирают пользователя, куки, заголовки и тела.
+		dataCollection: {
+			userInfo: false,
+			cookies: false,
+			httpHeaders: false,
+			httpBodies: [],
+			urlQueryParams: false,
+			genAI: { inputs: false, outputs: false },
+			stackFrameVariables: false,
+		},
+		// Сессии на каждый запрос не нужны, только ошибки.
+		integrations: [Sentry.httpIntegration({ sessions: false })],
 	})
 }
 

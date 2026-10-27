@@ -11,6 +11,16 @@ export function initSentry(dsn: string) {
 		dsn,
 		environment: import.meta.env.PUBLIC_SENTRY_ENVIRONMENT || 'production',
 		release: `community-taplist@${import.meta.env.APP_VERSION}`,
+		// Явно, а не по умолчанию: дефолты v11 собирают пользователя, куки, заголовки и тела.
+		dataCollection: {
+			userInfo: false,
+			cookies: false,
+			httpHeaders: false,
+			httpBodies: [],
+			urlQueryParams: false,
+			genAI: { inputs: false, outputs: false },
+			stackFrameVariables: false,
+		},
 		// Сессия ушла бы в Sentry на каждый заход, а нужны только ошибки.
 		integrations: (defaults) => defaults.filter(({ name }) => name !== 'BrowserSession'),
 	})
