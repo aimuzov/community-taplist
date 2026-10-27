@@ -23,8 +23,14 @@ if (!Object.fromEntries)
 	Object.fromEntries = function (entries) {
 		var result = {}
 
+		// defineProperty, а не присваивание: ключ __proto__ должен стать обычным полем.
 		Array.from(entries).forEach(function (entry) {
-			result[entry[0]] = entry[1]
+			Object.defineProperty(result, entry[0], {
+				value: entry[1],
+				enumerable: true,
+				writable: true,
+				configurable: true,
+			})
 		})
 
 		return result
@@ -32,8 +38,17 @@ if (!Object.fromEntries)
 
 if (!Promise.allSettled)
 	Promise.allSettled = function (promises) {
+		var inputs
+
+		// Как у настоящего allSettled: ошибка перебора -- отклонённый промис, а не исключение.
+		try {
+			inputs = Array.from(promises)
+		} catch (error) {
+			return Promise.reject(error)
+		}
+
 		return Promise.all(
-			Array.from(promises).map(function (promise) {
+			inputs.map(function (promise) {
 				return Promise.resolve(promise).then(
 					function (value) {
 						return { status: 'fulfilled', value: value }
