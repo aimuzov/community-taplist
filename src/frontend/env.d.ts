@@ -7,4 +7,8 @@ interface ImportMetaEnv {
 	readonly APP_VERSION: string
 	/** Как часто табло забирает свежий список, в миллисекундах. */
 	readonly PUBLIC_DATA_UPDATE_INTERVAL?: string
+	/** DSN проекта community-taplist в Sentry. Без него SDK не грузится. */
+	readonly PUBLIC_SENTRY_DSN?: string
+	/** Окружение событий в Sentry, по умолчанию production. */
+	readonly PUBLIC_SENTRY_ENVIRONMENT?: string
 }

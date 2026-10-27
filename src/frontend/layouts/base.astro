@@ -23,6 +23,13 @@ const { title } = Astro.props
 		<!-- Блокирующий намеренно: полифиллы должны отработать до бандла Svelte. -->
 		<script is:inline src="/polyfills.js"></script>
 		<slot name="head" />
+		<script>
+			// SDK Sentry ходит отдельным чанком и не тормозит первую отрисовку табло.
+			const dsn = import.meta.env.PUBLIC_SENTRY_DSN
+
+			if (import.meta.env.PROD && dsn)
+				void import('#frontend/lib/sentry.ts').then(({ initSentry }) => initSentry(dsn))
+		</script>
 	</head>
 	<body>
 		<slot />
