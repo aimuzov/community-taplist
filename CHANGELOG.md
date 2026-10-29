@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.2](https://github.com/aimuzov/community-taplist/compare/v2.5.1...v2.5.2) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** move to infra-site-kit 5.9.1 with the strict Sentry events ([ec4d111](https://github.com/aimuzov/community-taplist/commit/ec4d111eca52d37ec51a5d398b5f96d838b8c324))
+* **deps:** move to infra-site-kit 5.9.1 with the strict Sentry events ([049ae7c](https://github.com/aimuzov/community-taplist/commit/049ae7cfafa08ba5f13236316c788b5f4c709658))
+
 ## [2.5.1](https://github.com/aimuzov/community-taplist/compare/v2.5.0...v2.5.1) (2026-10-27)
 
 
