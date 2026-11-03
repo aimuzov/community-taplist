@@ -24,7 +24,7 @@
 		"api": "node --watch --env-file-if-exists=.env src/backend/server.ts"
 	},
 	"devDependencies": {
-		"@aimuzov/infra-site-kit": "github:aimuzov/infra-site-kit#c9216fa5715282764b55141c08f885e0c4d9659e",
+		"@aimuzov/infra-site-kit": "github:aimuzov/infra-site-kit#d459456a071921196e94bbe4dfecbf5987efb96f",
 		"@astrojs/check": "0.9.10",
 		"@astrojs/svelte": "9.0.1",
 		"@fontsource/arsenal": "5.3.0",
