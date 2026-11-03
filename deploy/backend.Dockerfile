@@ -1,5 +1,4 @@
-# Сервис API: Node запускает TypeScript сам, сборка не нужна. Из зависимостей ставится
-# только SDK Sentry, остальное в devDependencies.
+# Сервис API: Node запускает TypeScript сам, сборка не нужна.
 # Контекст сборки -- корень репо: API берёт типы и пример таплиста из src/shared.
 
 FROM node:26.11.1-alpine
