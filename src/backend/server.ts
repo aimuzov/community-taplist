@@ -1,11 +1,12 @@
 /**
  * API таплиста: список кранов для табло и его сохранение из редактора.
  *
- * Node запускает файл сам, без сборки и зависимостей. Пароль редактора проверяет Caddy
+ * Node запускает файл сам, без сборки. Пароль редактора проверяет Caddy
  * (basic_auth на /editor и PUT /api/items), сюда приходят уже разрешённые запросы.
  */
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
+import { HttpError, readJson as readJsonBody } from '@aimuzov/infra-node-kit/http.js'
 
 import { initSentry, reportError } from '#backend/sentry.ts'
 import { itemsGet, itemsPut } from '#backend/store.ts'
@@ -18,47 +19,14 @@ export const BODY_LIMIT = 16 * 1024 * 1024
 
 type Reply = [status: number, body: unknown]
 
-/**
- * Ошибка с HTTP-статусом для клиента.
- *
- * Статус и сообщение уходят в ответ как есть. Любая другая ошибка
- * пишется в лог и отдаётся с кодом 500.
- */
-export class HttpError extends Error {
-	// Без parameter properties: Node только стирает типы и такой синтаксис не запустит.
-	readonly status: number
+export { HttpError }
 
-	constructor(status: number, message: string) {
-		super(message)
-		this.status = status
-	}
-}
-
-/**
- * Собирает тело запроса целиком и разбирает его как JSON.
- *
- * Бросает {@link HttpError} 413, если тело больше `limit`, и 400, если это не JSON.
- *
- * @param request Тело запроса, на вход годится и `IncomingMessage`.
- * @param limit Предел размера тела в байтах.
- */
-export async function readJson(request: AsyncIterable<Buffer>, limit = BODY_LIMIT): Promise<unknown> {
-	const chunks: Buffer[] = []
-	let size = 0
-
-	for await (const chunk of request) {
-		size += chunk.length
-
-		if (size > limit) throw new HttpError(413, 'Список больше 16 МБ: уменьшите обложки')
-
-		chunks.push(chunk)
-	}
-
-	try {
-		return JSON.parse(Buffer.concat(chunks).toString('utf8'))
-	} catch {
-		throw new HttpError(400, 'Тело запроса не JSON')
-	}
+export function readJson(request: AsyncIterable<Buffer>, limit = BODY_LIMIT): Promise<unknown> {
+	return readJsonBody(request, {
+		limit,
+		tooLargeMessage: 'Список больше 16 МБ: уменьшите обложки',
+		invalidJsonMessage: 'Тело запроса не JSON',
+	})
 }
 
 const routes: Record<string, (request: IncomingMessage) => Promise<Reply>> = {
