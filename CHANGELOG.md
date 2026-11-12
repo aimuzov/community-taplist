@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.6.0](https://github.com/aimuzov/community-taplist/compare/v2.5.2...v2.6.0) (2026-11-12)
+
+
+### Features
+
+* **deploy:** publish Taplist images in GitHub Actions ([#83](https://github.com/aimuzov/community-taplist/issues/83)) ([30d73da](https://github.com/aimuzov/community-taplist/commit/30d73daa38524e9edce0cb26051d6756d604692f))
+
+
+### Bug Fixes
+
+* use the editor beer mug as the favicon ([#86](https://github.com/aimuzov/community-taplist/issues/86)) ([9e5f64e](https://github.com/aimuzov/community-taplist/commit/9e5f64ee2588885c786f35b2831172d91c6ef1c1))
+
 ## [2.5.2](https://github.com/aimuzov/community-taplist/compare/v2.5.1...v2.5.2) (2026-10-28)
 
 
