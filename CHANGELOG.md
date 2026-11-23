@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/aimuzov/community-taplist/compare/v2.6.0...v2.6.1) (2026-11-23)
+
+
+### Bug Fixes
+
+* **deps:** update astro and svelte ([#91](https://github.com/aimuzov/community-taplist/issues/91)) ([8948e17](https://github.com/aimuzov/community-taplist/commit/8948e1778480341e7a5da08bc1e07c1a19c34bb7))
+
 ## [2.6.0](https://github.com/aimuzov/community-taplist/compare/v2.5.2...v2.6.0) (2026-11-12)
 
 
