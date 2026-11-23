@@ -36,7 +36,7 @@
 		"astro": "7.4.13",
 		"conventional-commits-filter": "5.0.0",
 		"lucide-static": "1.48.0",
-		"oxlint": "1.93.0",
+		"oxlint": "1.94.0",
 		"prettier": "3.10.1",
 		"stylelint": "17.16.0",
 		"svelte": "5.58.0",
